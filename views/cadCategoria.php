@@ -1,3 +1,21 @@
+<?php
+require_once "../models/Categoria.php";
+require_once "../controllers/CategoriaController.php";
+
+
+$categoria = new Categoria();
+
+if (isset($_POST['enviar'])){
+    $categoria->setDescricao($_POST['descricao']);
+    if(CategoriaController::getInstance()->inserir($categoria)){
+        header('Location: viewCategoria.php');
+    }
+}
+
+echo $categoria->getDescricao();
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -45,7 +63,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="css/dashboard.css" rel="stylesheet">
+    <link href="../css/dashboard.css" rel="stylesheet">
 </head>
 <body>
 
@@ -67,7 +85,7 @@
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
                 <?php
-                    require_once "menu.php";
+                require_once "menu.php";
                 ?>
 
                 <!--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -106,11 +124,18 @@
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <a href="cadCategoria.php" class="btn btn-success">Nova categoria</a>
-            </div>
-            <div>
-                Tabela
+            <!--Conteúdo-->
+            <div class="container-fluid">
+                <form action="#" method="post">
+                    <div class="mb-3">
+                        <label for="descricao">Descricão:</label>
+                        <input type="text" name="descricao" id="descricao" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <input class="btn btn-primary" type="submit" value="Salvar" name="enviar">
+                        <a href="viewCategoria.php" class="btn btn-danger">Cancelar</a>
+                    </div>
+                </form>
             </div>
         </main>
     </div>
@@ -123,6 +148,6 @@
 
 
 <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
-<script src="js/dashboard.js"></script>
+<script src="../js/dashboard.js"></script>
 </body>
 </html>

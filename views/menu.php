@@ -6,7 +6,7 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="views/viewCategoria.php">
+        <a class="nav-link" href="viewCategoria.php">
             <span data-feather="folder"></span>
             Categorias
         </a>
