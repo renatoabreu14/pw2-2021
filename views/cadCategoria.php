@@ -5,14 +5,16 @@ require_once "../controllers/CategoriaController.php";
 
 $categoria = new Categoria();
 
+if (isset($_GET['editar'])){
+    $categoria = CategoriaController::getInstance()->getCategoria($_GET['editar']);
+}
+
 if (isset($_POST['enviar'])){
     $categoria->setDescricao($_POST['descricao']);
-    if(CategoriaController::getInstance()->inserir($categoria)){
+    if(CategoriaController::getInstance()->gravar($categoria)){
         header('Location: viewCategoria.php');
     }
 }
-
-echo $categoria->getDescricao();
 
 ?>
 
@@ -28,6 +30,9 @@ echo $categoria->getDescricao();
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
+    <?php
+        require_once "assets.php";
+    ?>
 
 
     <!-- Bootstrap core CSS -->
@@ -129,7 +134,7 @@ echo $categoria->getDescricao();
                 <form action="#" method="post">
                     <div class="mb-3">
                         <label for="descricao">Descricão:</label>
-                        <input type="text" name="descricao" id="descricao" class="form-control">
+                        <input type="text" name="descricao" id="descricao" class="form-control" value="<?php echo $categoria->getDescricao();?>">
                     </div>
                     <div class="mb-3">
                         <input class="btn btn-primary" type="submit" value="Salvar" name="enviar">

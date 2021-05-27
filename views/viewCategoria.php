@@ -1,3 +1,15 @@
+<?php
+require_once "../controllers/CategoriaController.php";
+
+$lstCategorias = CategoriaController::getInstance()->getTodos();
+
+if (isset($_GET['excluir'])){
+    if (CategoriaController::getInstance()->delete($_GET['excluir'])){
+       header('Location: viewCategoria.php');
+    }
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,7 +22,9 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
-
+    <?php
+        require_once "assets.php";
+    ?>
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -110,7 +124,33 @@
                 <a href="cadCategoria.php" class="btn btn-success">Nova categoria</a>
             </div>
             <div>
-                Tabela
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Descricao</th>
+                            <th>-</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        foreach ($lstCategorias as $categoria){
+                            echo "<tr>
+                                    <td>".$categoria->getDescricao()."</td>
+                                    <td>
+                                        <a href='cadCategoria.php?editar=".$categoria->getId()."'><span class='material-icons text-primary' 
+                                        alt='Editar' title='Editar'>edit</span></a>
+                                        &nbsp;
+                                        <a href='viewCategoria.php?excluir=".$categoria->getId()."'><span class='material-icons text-danger' 
+                                        alt='Excluir' title='Excluir'>delete</span></a>
+                                        
+                                    </td>
+                                </tr>";
+                        }
+                        ?>
+
+                    </tbody>
+                </table>
+
             </div>
         </main>
     </div>
