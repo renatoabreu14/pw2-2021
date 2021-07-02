@@ -1,13 +1,11 @@
 <?php
-//require_once "validarSessao.php";
+require_once "../controllers/UsuarioController.php";
 
-require_once "../controllers/CategoriaController.php";
-
-$lstCategorias = CategoriaController::getInstance()->getTodos();
+$lstUsuarios = UsuarioController::getInstance()->getTodos();
 
 if (isset($_GET['excluir'])){
-    if (CategoriaController::getInstance()->delete($_GET['excluir'])){
-       header('Location: viewCategoria.php');
+    if (ProdutoController::getInstance()->delete($_GET['excluir'])){
+        header('Location: viewUsuario.php');
     }
 }
 ?>
@@ -25,7 +23,7 @@ if (isset($_GET['excluir'])){
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
     <?php
-        require_once "assets.php";
+    require_once "assets.php";
     ?>
 
     <!-- Bootstrap core CSS -->
@@ -83,7 +81,7 @@ if (isset($_GET['excluir'])){
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
                 <?php
-                    require_once "menu.php";
+                require_once "menu.php";
                 ?>
 
                 <!--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -123,32 +121,42 @@ if (isset($_GET['excluir'])){
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <a href="cadCategoria.php" class="btn btn-success">Nova categoria</a>
+                <a href="cadUsuario.php" class="btn btn-success">Novo usuário</a>
             </div>
             <div>
+                <!--
+                    id
+                    nome
+                    email
+                    telefone
+                -->
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>Descricao</th>
-                            <th>-</th>
-                        </tr>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Email</th>
+                        <th>Telefone</th>
+                        <th>-</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($lstCategorias as $categoria){
-                            echo "<tr>
-                                    <td>".$categoria->getDescricao()."</td>
+                    <?php
+                    foreach ($lstUsuarios as $usuario){
+                        echo "<tr>
+                                    <td>".$usuario->getNome()."</td>
+                                    <td>".$usuario->getEmail()."</td>
+                                    <td>".$usuario->getTelefone()."</td>
                                     <td>
-                                        <a href='cadCategoria.php?editar=".$categoria->getId()."'><span class='material-icons text-primary' 
+                                        <a href='cadUsuario.php?editar=".$usuario->getId()."'><span class='material-icons text-primary' 
                                         alt='Editar' title='Editar'>edit</span></a>
                                         &nbsp;
-                                        <a href='viewCategoria.php?excluir=".$categoria->getId()."'><span class='material-icons text-danger' 
+                                        <a href='viewUsuario.php?excluir=".$usuario->getId()."'><span class='material-icons text-danger' 
                                         alt='Excluir' title='Excluir'>delete</span></a>
                                         
                                     </td>
                                 </tr>";
-                        }
-                        ?>
+                    }
+                    ?>
 
                     </tbody>
                 </table>

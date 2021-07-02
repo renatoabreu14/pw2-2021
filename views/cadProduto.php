@@ -1,15 +1,26 @@
 <?php
-//require_once "validarSessao.php";
 
+require_once "../controllers/ProdutoController.php";
 require_once "../controllers/CategoriaController.php";
 
+
+$produto = new Produto();
 $lstCategorias = CategoriaController::getInstance()->getTodos();
 
-if (isset($_GET['excluir'])){
-    if (CategoriaController::getInstance()->delete($_GET['excluir'])){
-       header('Location: viewCategoria.php');
+if (isset($_GET['editar'])){
+    $produto = ProdutoController::getInstance()->getProduto($_GET['editar']);
+}
+
+if (isset($_POST['enviar'])){
+    $produto->setNome($_POST['nome']);
+    $produto->setDescricao($_POST['descricao']);
+    $produto->setValor($_POST['valor']);
+    $produto->getCategoria()->setId($_POST['categoria']);
+    if(ProdutoController::getInstance()->gravar($produto)){
+        header('Location: viewProduto.php');
     }
 }
+
 ?>
 
 <!doctype html>
@@ -25,8 +36,9 @@ if (isset($_GET['excluir'])){
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
     <?php
-        require_once "assets.php";
+    require_once "assets.php";
     ?>
+
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -83,7 +95,7 @@ if (isset($_GET['excluir'])){
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
                 <?php
-                    require_once "menu.php";
+                require_once "menu.php";
                 ?>
 
                 <!--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -122,37 +134,42 @@ if (isset($_GET['excluir'])){
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <a href="cadCategoria.php" class="btn btn-success">Nova categoria</a>
-            </div>
-            <div>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Descricao</th>
-                            <th>-</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($lstCategorias as $categoria){
-                            echo "<tr>
-                                    <td>".$categoria->getDescricao()."</td>
-                                    <td>
-                                        <a href='cadCategoria.php?editar=".$categoria->getId()."'><span class='material-icons text-primary' 
-                                        alt='Editar' title='Editar'>edit</span></a>
-                                        &nbsp;
-                                        <a href='viewCategoria.php?excluir=".$categoria->getId()."'><span class='material-icons text-danger' 
-                                        alt='Excluir' title='Excluir'>delete</span></a>
-                                        
-                                    </td>
-                                </tr>";
-                        }
-                        ?>
+            <!--Conteúdo-->
+            <div class="container-fluid">
+                <form action="#" method="post">
+                    <div class="mb-3">
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" id="nome" class="form-control" value="<?php echo $produto->getNome();?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao">Descricão:</label>
+                        <textarea name="descricao" id="descricao" cols="30" rows="5" class="form-control"><?php echo $produto->getDescricao();?></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria">Categoria:</label>
+                        <select name="categoria" id="categoria" class="form-control">
+                            <option value="0">Selecione uma categoria</option>
+                            <?php
+                                foreach ($lstCategorias as $categoria){
+                                    if ($categoria->getId() == $produto->getCategoria()->getId()){
+                                        echo "<option value='".$categoria->getId()."' selected>".$categoria->getDescricao()."</option>";
+                                    }else{
+                                        echo "<option value='".$categoria->getId()."'>".$categoria->getDescricao()."</option>";
+                                    }
 
-                    </tbody>
-                </table>
-
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="valor">Valor:</label>
+                        <input type="text" name="valor" id="valor" class="form-control" value="<?php echo $produto->getValor();?>">
+                    </div>
+                    <div class="mb-3">
+                        <input class="btn btn-primary" type="submit" value="Salvar" name="enviar">
+                        <a href="viewProduto.php" class="btn btn-danger">Cancelar</a>
+                    </div>
+                </form>
             </div>
         </main>
     </div>

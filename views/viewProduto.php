@@ -1,13 +1,11 @@
 <?php
-//require_once "validarSessao.php";
+require_once "../controllers/ProdutoController.php";
 
-require_once "../controllers/CategoriaController.php";
-
-$lstCategorias = CategoriaController::getInstance()->getTodos();
+$lstProdutos = ProdutoController::getInstance()->getTodos();
 
 if (isset($_GET['excluir'])){
-    if (CategoriaController::getInstance()->delete($_GET['excluir'])){
-       header('Location: viewCategoria.php');
+    if (ProdutoController::getInstance()->delete($_GET['excluir'])){
+        header('Location: viewProduto.php');
     }
 }
 ?>
@@ -25,7 +23,7 @@ if (isset($_GET['excluir'])){
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
     <?php
-        require_once "assets.php";
+    require_once "assets.php";
     ?>
 
     <!-- Bootstrap core CSS -->
@@ -83,7 +81,7 @@ if (isset($_GET['excluir'])){
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
                 <?php
-                    require_once "menu.php";
+                require_once "menu.php";
                 ?>
 
                 <!--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -123,32 +121,43 @@ if (isset($_GET['excluir'])){
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <a href="cadCategoria.php" class="btn btn-success">Nova categoria</a>
+                <a href="cadProduto.php" class="btn btn-success">Novo produto</a>
             </div>
             <div>
+                <!--
+                    id
+                    nome
+                    descricao
+                    categoria
+                    valor
+                -->
                 <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>Descricao</th>
-                            <th>-</th>
-                        </tr>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Valor</th>
+                        <th>-</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($lstCategorias as $categoria){
-                            echo "<tr>
-                                    <td>".$categoria->getDescricao()."</td>
+                    <?php
+                    foreach ($lstProdutos as $produto){
+                        echo "<tr>
+                                    <td>".$produto->getNome()."</td>
+                                    <td>".$produto->getCategoria()->getDescricao()."</td>
+                                    <td>".$produto->getValor()."</td>
                                     <td>
-                                        <a href='cadCategoria.php?editar=".$categoria->getId()."'><span class='material-icons text-primary' 
+                                        <a href='cadProduto.php?editar=".$produto->getId()."'><span class='material-icons text-primary' 
                                         alt='Editar' title='Editar'>edit</span></a>
                                         &nbsp;
-                                        <a href='viewCategoria.php?excluir=".$categoria->getId()."'><span class='material-icons text-danger' 
+                                        <a href='viewProduto.php?excluir=".$produto->getId()."'><span class='material-icons text-danger' 
                                         alt='Excluir' title='Excluir'>delete</span></a>
                                         
                                     </td>
                                 </tr>";
-                        }
-                        ?>
+                    }
+                    ?>
 
                     </tbody>
                 </table>

@@ -1,15 +1,24 @@
 <?php
-//require_once "validarSessao.php";
 
-require_once "../controllers/CategoriaController.php";
+require_once "../controllers/UsuarioController.php";
 
-$lstCategorias = CategoriaController::getInstance()->getTodos();
 
-if (isset($_GET['excluir'])){
-    if (CategoriaController::getInstance()->delete($_GET['excluir'])){
-       header('Location: viewCategoria.php');
+$usuario = new Usuario();
+
+if (isset($_GET['editar'])){
+    $usuario = UsuarioController::getInstance()->getUsuario($_GET['editar']);
+}
+
+if (isset($_POST['enviar'])){
+    $usuario->setNome($_POST['nome']);
+    $usuario->setEmail($_POST['email']);
+    $usuario->setTelefone($_POST['telefone']);
+    $usuario->setSenha(md5($_POST['senha']));
+    if(UsuarioController::getInstance()->gravar($usuario)){
+        header('Location: viewUsuario.php');
     }
 }
+
 ?>
 
 <!doctype html>
@@ -25,8 +34,9 @@ if (isset($_GET['excluir'])){
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/dashboard/">
 
     <?php
-        require_once "assets.php";
+    require_once "assets.php";
     ?>
+
 
     <!-- Bootstrap core CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
@@ -83,7 +93,7 @@ if (isset($_GET['excluir'])){
         <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
             <div class="position-sticky pt-3">
                 <?php
-                    require_once "menu.php";
+                require_once "menu.php";
                 ?>
 
                 <!--<h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
@@ -122,37 +132,43 @@ if (isset($_GET['excluir'])){
         </nav>
 
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                <a href="cadCategoria.php" class="btn btn-success">Nova categoria</a>
-            </div>
-            <div>
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Descricao</th>
-                            <th>-</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        foreach ($lstCategorias as $categoria){
-                            echo "<tr>
-                                    <td>".$categoria->getDescricao()."</td>
-                                    <td>
-                                        <a href='cadCategoria.php?editar=".$categoria->getId()."'><span class='material-icons text-primary' 
-                                        alt='Editar' title='Editar'>edit</span></a>
-                                        &nbsp;
-                                        <a href='viewCategoria.php?excluir=".$categoria->getId()."'><span class='material-icons text-danger' 
-                                        alt='Excluir' title='Excluir'>delete</span></a>
-                                        
-                                    </td>
-                                </tr>";
+            <!--Conteúdo-->
+            <div class="container-fluid">
+                <form action="#" method="post">
+                    <div class="mb-3">
+                        <label for="nome">Nome:</label>
+                        <input type="text" name="nome" id="nome" class="form-control" value="<?php echo $usuario->getNome();?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="telefone">Telefone:</label>
+                        <input type="text" name="telefone" id="telefone" class="form-control" value="<?php echo $usuario->getTelefone();?>">
+                    </div>
+                    <?php
+                        if (isset($_GET['editar'])){
+                    ?>
+                        <div class="mb-3">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" id="email" class="form-control" disabled="true" value="<?php echo $usuario->getEmail();?>">
+                        </div>
+                    <?php
+                        }else{
+                    ?>
+                        <div class="mb-3">
+                            <label for="email">Email:</label>
+                            <input type="email" name="email" id="email" class="form-control" value="<?php echo $usuario->getEmail();?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="senha">Senha:</label>
+                            <input type="password" name="senha" id="senha" class="form-control" value="">
+                        </div>
+                    <?php
                         }
-                        ?>
-
-                    </tbody>
-                </table>
-
+                    ?>
+                    <div class="mb-3">
+                        <input class="btn btn-primary" type="submit" value="Salvar" name="enviar">
+                        <a href="viewUsuario.php" class="btn btn-danger">Cancelar</a>
+                    </div>
+                </form>
             </div>
         </main>
     </div>

@@ -1,4 +1,6 @@
 <?php
+//require_once "validarSessao.php";
+
 require_once "../models/Categoria.php";
 require_once "../controllers/CategoriaController.php";
 

@@ -12,13 +12,13 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="viewProduto.php">
             <span data-feather="shopping-cart"></span>
             Produtos
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="viewUsuario.php">
             <span data-feather="users"></span>
             Usuários
         </a>
