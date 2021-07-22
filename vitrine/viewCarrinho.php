@@ -1,12 +1,18 @@
 <?php
-require_once "../controllers/CategoriaController.php";
+session_start();
+require_once "ItemCarrinho.php";
 require_once "../controllers/ProdutoController.php";
 
-$lstCategorias = CategoriaController::getInstance()->getTodos();
+$carrinho = array();
+if(isset($_SESSION['shopping-cart'])){
+    $carrinho = unserialize($_SESSION['shopping-cart']);
+}
 
-$lstProdutos = null;
-if (isset($_GET['categoria'])){
-    $lstProdutos = ProdutoController::getInstance()->getProdutosByCategoria($_GET['categoria']);
+if (isset($_GET['add'])){
+    $item = new ItemCarrinho();
+    $item->setProduto(ProdutoController::getInstance()->getProduto($_GET['add']));
+    $carrinho[] = $item;
+    $_SESSION['shopping-cart'] = serialize($carrinho);
 }
 
 ?>
@@ -75,9 +81,9 @@ if (isset($_GET['categoria'])){
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown03" data-bs-toggle="dropdown" aria-expanded="false">Categorias</a>
                     <ul class="dropdown-menu" aria-labelledby="dropdown03">
                         <?php
-                            foreach ($lstCategorias as $categoria) {
-                                echo "<li><a class='dropdown-item' href='lista-produtos.php?categoria=".$categoria->getId()."'>".$categoria->getDescricao()."</a></li>";
-                            }
+                        foreach ($lstCategorias as $categoria) {
+                            echo "<li><a class='dropdown-item' href='lista-produtos.php?categoria=".$categoria->getId()."'>".$categoria->getDescricao()."</a></li>";
+                        }
                         ?>
                     </ul>
                 </li>
@@ -99,20 +105,18 @@ if (isset($_GET['categoria'])){
 
 <main class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <?php
-            foreach($lstProdutos as $produto){
-                echo "<div class='col'>
-                            <div class='card h-100'>
-                                <img src='../images/products/".$produto->getImagem()."' class='card-img-top' alt='...' width='256' height='479'>
-                                <div class='card-body'>
-                                    <h5 class='card-title'>".$produto->getNome()."</h5>
-                                    <h3 class='card-text text-center'><b>R$ ".number_format($produto->getValor(), 2, ",", ".")."</b></h3>
-                                    <p class='text-center'><a href='' class='btn btn-primary'>Adicionar ao carrinho</a></p>
-                                </div>
-                            </div>
-                        </div>";
+
+    <?php
+        if(isset($_SESSION['shopping-cart'])){
+            $carrinho = unserialize($_SESSION['shopping-cart']);
+            foreach($carrinho as $item){
+                var_dump($item);
             }
-        ?>
+
+        }else{
+            echo "<p class='text-center'><h2>Carrinho vazio</h2></p>";
+        }
+    ?>
     </div>
 </main>
 <footer class="footer mt-auto py-3 bg-light">

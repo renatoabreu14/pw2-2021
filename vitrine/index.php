@@ -148,10 +148,11 @@ $lstTresProdutos = ProdutoController::getInstance()->getUltimosTres();
             foreach($lstTresProdutos as $produto){
                 echo "<div class='col'>
                             <div class='card h-100'>
-                                <img src='../images/products/cadeira-gamer.jpg' class='card-img-top' alt='...'>
+                                <img src='../images/products/".$produto->getImagem()."' class='card-img-top' alt='...' width='256' height='479'>
                                 <div class='card-body'>
                                     <h5 class='card-title'>".$produto->getNome()."</h5>
-                                    <p class='card-text'>".$produto->getDescricao()."</p>
+                                    <h3 class='card-text text-center'><b>R$ ".number_format($produto->getValor(), 2, ",", ".")."</b></h3>
+                                    <p class='text-center'><a href='viewCarrinho.php?add=".$produto->getId()."' class='btn btn-primary'>Adicionar ao carrinho</a></p>
                                 </div>
                             </div>
                         </div>";
