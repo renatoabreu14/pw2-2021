@@ -1,4 +1,5 @@
 <?php
+require_once "validarSessao.php";
 require_once "../controllers/ProdutoController.php";
 
 $lstProdutos = ProdutoController::getInstance()->getTodos();

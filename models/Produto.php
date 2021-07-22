@@ -8,6 +8,7 @@ class Produto{
     private $descricao;
     private $categoria;
     private $valor;
+    private $imagem;
 
     /**
      * Produto constructor.
@@ -97,6 +98,22 @@ class Produto{
     public function setValor($valor)
     {
         $this->valor = $valor;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getImagem()
+    {
+        return $this->imagem;
+    }
+
+    /**
+     * @param mixed $imagem
+     */
+    public function setImagem($imagem)
+    {
+        $this->imagem = $imagem;
     }
 
 }

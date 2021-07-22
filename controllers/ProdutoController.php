@@ -57,6 +57,7 @@ class ProdutoController{
         $produto->setNome($row['nome']);
         $produto->setDescricao($row['descricao']);
         $produto->setValor($row['valor']);
+        $produto->setImagem($row['imagem']);
         $produto->getCategoria()->setId($row['categoria_id']);
         $produto->getCategoria()->setDescricao($row['categoria']);
         return $produto;
@@ -71,22 +72,30 @@ class ProdutoController{
     }
 
     private function inserir(Produto $produto){
-        $sql = "INSERT INTO produto (nome, descricao, categoria_id, valor) VALUES (:nome, :descricao, :categoria, :valor)";
+        $sql = "INSERT INTO produto (nome, descricao, categoria_id, valor, imagem) VALUES (:nome, :descricao, :categoria, :valor, :imagem)";
         $statement = $this->conexao->prepare($sql);
         $statement->bindValue(":nome", $produto->getNome());
         $statement->bindValue(":descricao", $produto->getDescricao());
         $statement->bindValue(":categoria", $produto->getCategoria()->getId());
         $statement->bindValue(":valor", $produto->getValor());
+        $statement->bindValue(":imagem", $produto->getImagem());
         return $statement->execute();
     }
 
     private function alterar(Produto $produto){
-        $sql = "UPDATE produto SET nome = :nome, descricao = :descricao, categoria_id=:categoria, valor=:valor WHERE id = :id";
+        if ($produto->getImagem() == ""){
+            $sql = "UPDATE produto SET nome = :nome, descricao = :descricao, categoria_id=:categoria, valor=:valor WHERE id = :id";
+        }else{
+            $sql = "UPDATE produto SET nome = :nome, descricao = :descricao, categoria_id=:categoria, valor=:valor, imagem=:imagem WHERE id = :id";
+        }
         $statement = $this->conexao->prepare($sql);
         $statement->bindValue(":nome", $produto->getNome());
         $statement->bindValue(":descricao", $produto->getDescricao());
         $statement->bindValue(":categoria", $produto->getCategoria()->getId());
         $statement->bindValue(":valor", $produto->getValor());
+        if ($produto->getImagem() != ""){
+            $statement->bindValue(":imagem", $produto->getImagem());
+        }
         $statement->bindValue(":id", $produto->getId());
         return $statement->execute();
     }

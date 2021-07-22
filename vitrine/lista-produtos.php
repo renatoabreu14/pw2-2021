@@ -103,7 +103,7 @@ if (isset($_GET['categoria'])){
             foreach($lstProdutos as $produto){
                 echo "<div class='col'>
                             <div class='card h-100'>
-                                <img src='../images/products/cadeira-gamer.jpg' class='card-img-top' alt='...' width='256' height='479'>
+                                <img src='../images/products/".$produto->getImagem()."' class='card-img-top' alt='...' width='256' height='479'>
                                 <div class='card-body'>
                                     <h5 class='card-title'>".$produto->getNome()."</h5>
                                     <p class='card-text'>".$produto->getDescricao()."</p>

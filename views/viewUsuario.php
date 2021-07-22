@@ -1,4 +1,5 @@
 <?php
+require_once "validarSessao.php";
 require_once "../controllers/UsuarioController.php";
 
 $lstUsuarios = UsuarioController::getInstance()->getTodos();

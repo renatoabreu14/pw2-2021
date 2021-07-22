@@ -1,3 +1,19 @@
+<?php
+session_start();
+require_once "../controllers/LoginController.php";
+
+$erro_login = false;
+
+if (isset($_POST['login'])){
+    $email = $_POST['email'];
+    $senha = md5($_POST['senha']);
+    if (LoginController::getInstance()->login($email, $senha)){
+        header('Location: ../index.php');
+    }else{
+        $erro_login = true;
+    }
+}
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -50,16 +66,24 @@
 <body class="text-center">
 
 <main class="form-signin">
-    <form>
+    <form action="#" method="post">
         <img class="mb-4" src="../images/bootstrap-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Efetue seu login</h1>
-
+        <?php
+            if ($erro_login){
+        ?>
+            <div class="alert alert-danger" role="alert">
+                Usuário ou senha inválidos.
+            </div>
+        <?php
+            }
+        ?>
         <div class="form-floating">
-            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+            <input name="email" type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
             <label for="floatingInput">Email</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" placeholder="Senha">
+            <input name="senha" type="password" class="form-control" id="floatingPassword" placeholder="Senha">
             <label for="floatingPassword">Senha</label>
         </div>
 
@@ -68,7 +92,7 @@
                 <input type="checkbox" value="remember-me"> Remember me
             </label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
+        <button name="login" class="w-100 btn btn-lg btn-primary" type="submit">Entrar</button>
         <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
     </form>
 </main>

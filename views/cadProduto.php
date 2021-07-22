@@ -1,5 +1,5 @@
 <?php
-
+require_once "validarSessao.php";
 require_once "../controllers/ProdutoController.php";
 require_once "../controllers/CategoriaController.php";
 
@@ -16,6 +16,15 @@ if (isset($_POST['enviar'])){
     $produto->setDescricao($_POST['descricao']);
     $produto->setValor($_POST['valor']);
     $produto->getCategoria()->setId($_POST['categoria']);
+    if(isset($_FILES['pic']))
+    {
+        $ext = strtolower(substr($_FILES['pic']['name'],-4)); //Pegando extensão do arquivo
+        $new_name = date("Y.m.d-H.i.s") . $ext; //Definindo um novo nome para o arquivo
+        $dir = '../images/products/'; //Diretório para uploads
+        move_uploaded_file($_FILES['pic']['tmp_name'], $dir.$new_name); //Fazer upload do arquivo
+        $produto->setImagem($new_name);
+    }
+
     if(ProdutoController::getInstance()->gravar($produto)){
         header('Location: viewProduto.php');
     }
@@ -136,7 +145,7 @@ if (isset($_POST['enviar'])){
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <!--Conteúdo-->
             <div class="container-fluid">
-                <form action="#" method="post">
+                <form action="#" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="nome">Nome:</label>
                         <input type="text" name="nome" id="nome" class="form-control" value="<?php echo $produto->getNome();?>">
@@ -164,6 +173,10 @@ if (isset($_POST['enviar'])){
                     <div class="mb-3">
                         <label for="valor">Valor:</label>
                         <input type="text" name="valor" id="valor" class="form-control" value="<?php echo $produto->getValor();?>">
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagem">Imagem:</label>
+                        <input id="imagem" type="file" name="pic" accept="image/*" class="form-control">
                     </div>
                     <div class="mb-3">
                         <input class="btn btn-primary" type="submit" value="Salvar" name="enviar">

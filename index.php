@@ -1,5 +1,5 @@
 <?php
-
+require_once "validarSessao.php";
 ?>
 <!doctype html>
 <html lang="en">
