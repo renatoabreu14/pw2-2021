@@ -105,18 +105,46 @@ if (isset($_GET['add'])){
 
 <main class="container">
     <div class="row row-cols-1 row-cols-md-3 g-4">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nome</th>
+                    <th>Valor</th>
+                    <th>Quantidade</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
 
-    <?php
-        if(isset($_SESSION['shopping-cart'])){
-            $carrinho = unserialize($_SESSION['shopping-cart']);
-            foreach($carrinho as $item){
-                var_dump($item);
-            }
 
-        }else{
-            echo "<p class='text-center'><h2>Carrinho vazio</h2></p>";
-        }
-    ?>
+                <?php
+                    $total = 0;
+                    if(isset($_SESSION['shopping-cart'])){
+                        $carrinho = unserialize($_SESSION['shopping-cart']);
+                        foreach($carrinho as $item){
+                            echo "<tr>
+                                    <td><img src='../images/products/".$item->getProduto()->getImagem()."' width='100px' height='100px'></td>
+                                    <td>".$item->getProduto()->getNome()."</td>
+                                    <td>".$item->getProduto()->getValor()."</td>
+                                    <td>".$item->getQuantidade()."</td>
+                                    <td>".$item->getProduto()->getValor() * $item->getQuantidade()."</td>
+                                  </tr>";
+                            $total += $item->getProduto()->getValor() * $item->getQuantidade();
+                        }
+
+                    }else{
+                        echo "<p class='text-center'><h2>Carrinho vazio</h2></p>";
+                    }
+                ?>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-center">TOTAL</td>
+                        <td><?php echo $total;?></td>
+                    </tr>
+                </tfoot>
+            </tbody>
+        </table>
     </div>
 </main>
 <footer class="footer mt-auto py-3 bg-light">
